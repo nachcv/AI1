@@ -15,8 +15,6 @@ from search import *
 class TowerSorting(Problem):
 
     def actions(self, state):
-        actions=[]
-        #Copy of the variables.
         num=state.number
         size=state.size
         grid=state.grid
@@ -25,8 +23,7 @@ class TowerSorting(Problem):
             for compare in range(num):
                 if(move!=compare and len(grid[move])>0 and len(grid[compare])<size):
                     move_tup=(move,compare)
-                    actions.append(move_tup)
-        return actions
+                    yield move_tup
 
     def result(self, state, action):
         origin = action[0]
