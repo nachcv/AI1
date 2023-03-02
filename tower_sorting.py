@@ -15,6 +15,8 @@ from search import *
 class TowerSorting(Problem):
 
     def actions(self, state):
+        actions=[]
+        #Copy of the variables.
         num=state.number
         size=state.size
         grid=state.grid
@@ -23,14 +25,22 @@ class TowerSorting(Problem):
             for compare in range(num):
                 if(move!=compare and len(grid[move])>0 and len(grid[compare])<size):
                     move_tup=(move,compare)
-                    yield move_tup
+                    actions.append(move_tup)
+        return actions
 
     def result(self, state, action):
         origin = action[0]
+        print(origin)
+
         end = action[1]
+        print(end)
+
         modify_grid=state.grid
+        print(modify_grid)
+
         value = modify_grid[origin].pop()
         modify_grid[end].append(value)
+        print(modify_grid)
         new_state = State(state.number, state.size,modify_grid,'Value :'+ str(value)+' moved from '+ str(origin) + " to "+ str(end))
         return new_state
 
@@ -38,14 +48,14 @@ class TowerSorting(Problem):
         num=state.number
         size=state.size
         grid=state.grid
+        same=True 
         for colum in range(num):
-            if (len(grid[colum])!=0 and len(grid[colum])!=size):
-                return False
-            else:
-                for same in range(size-1):
-                    if grid[colum][same]!=grid[colum][same+1]:
-                        return False
-        return True
+            if (len(grid[colum])!=0):
+                for row in range(len(grid[colum])):
+                    if grid[colum][row] != grid[colum][0]:
+                        same=False
+                        break
+        return same
 
 
 ###############
@@ -71,17 +81,11 @@ class State:
         return s
     #unico objetivo es ver si dos grid son iguales
     def __eq__(self, other):
-        eq = True
-        if ((self.number == other.number) and (self.size == other.size)):
-            for i in range(self.number):
-                for j in range(self.size):
-                    if self.grid[i] == other.grid[i]:
-                        eq=True
-        else:
-            eq=False
-        return eq
+        return self.grid==other.grid
+        
 
     def __hash__(self):
+        
         return hash(tuple(tuple(sorted(row)) for row in self.grid))
         
 
